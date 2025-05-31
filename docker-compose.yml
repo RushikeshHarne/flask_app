@@ -1,0 +1,26 @@
+
+
+version: '3.8'
+
+services:
+  flask-app:
+    image: harnempire/flask_demo-app:v1
+    ports:
+      - "4000:5000"
+    depends_on:
+      - mysql-db
+
+  mysql-db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
